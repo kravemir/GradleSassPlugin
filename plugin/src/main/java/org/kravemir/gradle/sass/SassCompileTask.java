@@ -64,7 +64,7 @@ public class SassCompileTask extends DefaultTask {
             OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(
                     new File(outputDir.getAbsolutePath() + File.separator + f.getName().replaceAll("\\.scss",".css"))
             ));
-            sass.write(out);
+            sass.write(out,minify);
             out.close();
         }
     }

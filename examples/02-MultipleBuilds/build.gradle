@@ -1,0 +1,24 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        mavenLocal()
+    }
+    dependencies {
+        classpath group: 'org.kravemir.gradle.sass', name: 'GradleSassPlugin', version: '1.0.2-SNAPSHOT'
+    }
+}
+
+apply plugin: 'org.kravemir.gradle.sass'
+
+sass {
+    dev {
+        srcDir = file("$projectDir/src/main/sass")
+        outDir = file("$buildDir/dev-css")
+    }
+    release {
+        srcDir = file("$projectDir/src/main/sass")
+        outDir = file("$buildDir/release-css")
+
+        minify = true
+    }
+}

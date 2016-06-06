@@ -14,7 +14,7 @@ apply plugin: 'java'
 apply plugin: 'maven'
 
 group 'org.kravemir.gradle.sass'
-version '1.0.1-SNAPSHOT'
+version '1.0.2-SNAPSHOT'
 
 sourceCompatibility = 1.8
 
@@ -41,7 +41,7 @@ pluginBundle {
     //website = 'http://kravemir.org/projects/gradle/sass-compiler-plugin'
     website = 'https://github.com/kravemir/GradleSassPlugin'
     vcsUrl = 'https://github.com/kravemir/GradleSassPlugin'
-    description = 'Sass Plugin with support for multiple sass resource sets'
+    description = 'Sass Plugin with support for multiple build configurations within project'
     tags = ['sass', 'scss', 'kravemir']
 
     plugins {

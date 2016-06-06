@@ -7,16 +7,17 @@ import org.gradle.api.Project;
 public class SassPlugin implements Plugin<Project>{
     @Override
     public void apply(Project project) {
-        DomainObjectCollection<SassSourceSet> sassSourceSets = project.container(SassSourceSet.class);
-        project.getExtensions().add("sass", sassSourceSets);
+        DomainObjectCollection<SassBuildConfiguration> sassBuildConfigurations = project.container(SassBuildConfiguration.class);
+        project.getExtensions().add("sass", sassBuildConfigurations);
 
-        project.afterEvaluate(p -> sassSourceSets.all(sassPack -> {
-            project.getTasks().create(sassPack.getName() + "Sass", SassCompileTask.class, t -> {
+        project.afterEvaluate(p -> sassBuildConfigurations.all(build -> {
+            project.getTasks().create(build.getName() + "Sass", SassCompileTask.class, t -> {
                 t.setGroup("sass");
-                t.setSrcDir(sassPack.getSrcDir());
-                t.setOutDir(sassPack.getOutDir());
-                t.setInclude(sassPack.getInclude());
-                t.setExclude(sassPack.getExclude());
+                t.setSrcDir(build.getSrcDir());
+                t.setOutDir(build.getOutDir());
+                t.setInclude(build.getInclude());
+                t.setExclude(build.getExclude());
+                t.setMinify(build.getMinify());
             });
         }));
     }

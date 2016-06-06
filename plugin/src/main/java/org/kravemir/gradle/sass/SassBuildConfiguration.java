@@ -2,7 +2,7 @@ package org.kravemir.gradle.sass;
 
 import java.io.File;
 
-public class SassSourceSet {
+public class SassBuildConfiguration {
     private final String name;
 
     private File srcDir;
@@ -11,7 +11,9 @@ public class SassSourceSet {
     private String include = null;
     private String exclude = null;
 
-    public SassSourceSet(String name) {
+    private boolean minify = false;
+
+    public SassBuildConfiguration(String name) {
         this.name = name;
     }
 
@@ -49,5 +51,13 @@ public class SassSourceSet {
 
     public void setExclude(String exclude) {
         this.exclude = exclude;
+    }
+
+    public boolean getMinify() {
+        return minify;
+    }
+
+    public void setMinify(boolean minify) {
+        this.minify = minify;
     }
 }
