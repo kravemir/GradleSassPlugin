@@ -1,8 +1,20 @@
-group 'org.kravemir.gradle.sass'
-version '1.0-SNAPSHOT'
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath "com.gradle.publish:plugin-publish-plugin:0.9.4"
+    }
+}
 
+apply plugin: "com.gradle.plugin-publish"
 apply plugin: 'java'
 apply plugin: 'maven'
+
+group 'org.kravemir.gradle.sass'
+version '1.0.1-SNAPSHOT'
 
 sourceCompatibility = 1.8
 
@@ -21,6 +33,21 @@ uploadArchives {
     repositories {
         mavenDeployer {
             repository(url: mavenLocal().url)
+        }
+    }
+}
+
+pluginBundle {
+    //website = 'http://kravemir.org/projects/gradle/sass-compiler-plugin'
+    website = 'https://github.com/kravemir/GradleSassPlugin'
+    vcsUrl = 'https://github.com/kravemir/GradleSassPlugin'
+    description = 'Sass Plugin with support for multiple sass resource sets'
+    tags = ['sass', 'scss', 'kravemir']
+
+    plugins {
+        sassPlugin {
+            id = 'org.kravemir.gradle.sass'
+            displayName = 'SASS Plugin'
         }
     }
 }
