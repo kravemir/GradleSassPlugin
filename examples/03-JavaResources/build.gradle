@@ -1,0 +1,29 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        mavenLocal()
+    }
+    dependencies {
+        classpath group: 'org.kravemir.gradle.sass', name: 'GradleSassPlugin', version: '1.0.2-SNAPSHOT'
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'org.kravemir.gradle.sass'
+
+sass {
+    main {
+        srcDir = file("$projectDir/src/main/sass")
+        outDir = file("$buildDir/dev-css")
+
+        registerInSourceSets = [ 'main' ]
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+}

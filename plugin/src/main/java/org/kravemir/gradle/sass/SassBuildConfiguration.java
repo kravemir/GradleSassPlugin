@@ -13,6 +13,8 @@ public class SassBuildConfiguration {
 
     private boolean minify = false;
 
+    private String[] registerInSourceSets = null;
+
     public SassBuildConfiguration(String name) {
         this.name = name;
     }
@@ -59,5 +61,13 @@ public class SassBuildConfiguration {
 
     public void setMinify(boolean minify) {
         this.minify = minify;
+    }
+
+    public String[] getRegisterInSourceSets() {
+        return registerInSourceSets;
+    }
+
+    public void setRegisterInSourceSets(String[] registerInSourceSets) {
+        this.registerInSourceSets = registerInSourceSets;
     }
 }
