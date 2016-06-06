@@ -4,7 +4,7 @@ buildscript {
         mavenLocal()
     }
     dependencies {
-        classpath group: 'org.kravemir.gradle.sass', name: 'GradleSassPlugin', version: '1.0.2-SNAPSHOT'
+        classpath group: 'org.kravemir.gradle.sass', name: 'GradleSassPlugin', version: '1.0'
     }
 }
 

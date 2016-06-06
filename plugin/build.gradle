@@ -14,7 +14,7 @@ apply plugin: 'java'
 apply plugin: 'maven'
 
 group 'org.kravemir.gradle.sass'
-version '1.0.2-SNAPSHOT'
+version '1.0'
 
 sourceCompatibility = 1.8
 
