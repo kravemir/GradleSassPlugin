@@ -29,7 +29,7 @@ buildscript {
     }
   }
   dependencies {
-    classpath "gradle.plugin.org.kravemir.gradle.sass:GradleSassPlugin:1.0"
+    classpath "gradle.plugin.org.kravemir.gradle.sass:GradleSassPlugin:1.1"
   }
 }
 
@@ -38,7 +38,7 @@ apply plugin: "org.kravemir.gradle.sass"
 Or with new the plugin mechanism:
 ```gradle
 plugins {
-  id "org.kravemir.gradle.sass" version "1.0"
+  id "org.kravemir.gradle.sass" version "1.1"
 }
 ```
 And, HelloSass configuration:
