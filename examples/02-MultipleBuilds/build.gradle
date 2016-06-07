@@ -1,10 +1,11 @@
 buildscript {
     repositories {
-        mavenCentral()
-        mavenLocal()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
     }
     dependencies {
-        classpath group: 'org.kravemir.gradle.sass', name: 'GradleSassPlugin', version: '1.0'
+        classpath 'gradle.plugin.org.kravemir.gradle.sass:GradleSassPlugin:1.1'
     }
 }
 
@@ -13,12 +14,15 @@ apply plugin: 'org.kravemir.gradle.sass'
 sass {
     dev {
         srcDir = file("$projectDir/src/main/sass")
-        outDir = file("$buildDir/dev-css")
+        outDir = file("$projectDir/build/dev-css")
+
+        exclude = "**/_*.scss"
     }
     release {
         srcDir = file("$projectDir/src/main/sass")
-        outDir = file("$buildDir/release-css")
+        outDir = file("$projectDir/build/release-css")
 
+        exclude = "**/_*.scss"
         minify = true
     }
 }

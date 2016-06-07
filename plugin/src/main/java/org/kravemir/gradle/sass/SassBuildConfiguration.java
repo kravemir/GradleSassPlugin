@@ -1,12 +1,14 @@
 package org.kravemir.gradle.sass;
 
 import java.io.File;
+import java.nio.file.Paths;
 
 public class SassBuildConfiguration {
     private final String name;
 
     private File srcDir;
     private File outDir;
+    private String outSubDir = null;
 
     private String include = null;
     private String exclude = null;
@@ -17,6 +19,12 @@ public class SassBuildConfiguration {
 
     public SassBuildConfiguration(String name) {
         this.name = name;
+    }
+
+    public File getBuildDir() {
+        if(outSubDir != null)
+            return Paths.get(outDir.getPath(), outSubDir).toFile();
+        return outDir;
     }
 
     public String getName() {
@@ -37,6 +45,14 @@ public class SassBuildConfiguration {
 
     public void setOutDir(File outDir) {
         this.outDir = outDir;
+    }
+
+    public String getOutSubDir() {
+        return outSubDir;
+    }
+
+    public void setOutSubDir(String outSubDir) {
+        this.outSubDir = outSubDir;
     }
 
     public String getInclude() {
