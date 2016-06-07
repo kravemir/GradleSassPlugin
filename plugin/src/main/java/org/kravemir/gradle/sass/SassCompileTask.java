@@ -8,6 +8,7 @@ import org.gradle.api.file.FileCollection;
 import org.gradle.api.tasks.InputFiles;
 import org.gradle.api.tasks.OutputDirectory;
 import org.gradle.api.tasks.TaskAction;
+import org.kravemir.gradle.sass.api.SassBuildConfiguration;
 
 import javax.inject.Inject;
 import java.io.File;
@@ -19,103 +20,67 @@ import java.io.OutputStreamWriter;
  */
 public class SassCompileTask extends DefaultTask {
 
-
-    private File srcDir;
-
-    @OutputDirectory
-    private File outDir;
-
-    private String include = "**/*.scss";
-    private String exclude = "**/_*";
-
-    Boolean minify = false;
+    private SassBuildConfiguration configuration;
 
     @Inject
     public SassCompileTask() {
     }
 
     FileCollection getSassFiles() {
-        if(srcDir.exists() == false)
+        if(configuration.getSrcDir().exists() == false)
             throw new RuntimeException("srcDir doesn't exists");
-        if(srcDir.isDirectory() == false)
+        if(configuration.getSrcDir().isDirectory() == false)
             throw new RuntimeException("srcDir isn't directory");
 
-        ConfigurableFileTree fileTree = getProject().fileTree(srcDir);
-        if(include != null)
-            fileTree.include(include);
-        if(exclude != null)
-            fileTree.exclude(exclude);
+        ConfigurableFileTree fileTree = getProject().fileTree(configuration.getSrcDir());
+        if(configuration.getInclude() != null)
+            fileTree.include(configuration.getInclude());
+        if(configuration.getExclude() != null)
+            fileTree.exclude(configuration.getExclude());
 
         return fileTree;
     }
 
     @InputFiles
     FileCollection getInputFiles() {
-        if(srcDir.exists() == false)
+        if(configuration.getSrcDir().exists() == false)
             throw new RuntimeException("srcDir doesn't exists");
-        if(srcDir.isDirectory() == false)
+        if(configuration.getSrcDir().isDirectory() == false)
             throw new RuntimeException("srcDir isn't directory");
 
-        ConfigurableFileTree fileTree = getProject().fileTree(srcDir);
+        ConfigurableFileTree fileTree = getProject().fileTree(configuration.getSrcDir());
         return fileTree;
+    }
+
+    @OutputDirectory
+    File getOutputDirectory() {
+        return getConfiguration().getBuildDir();
     }
 
     @TaskAction
     void compile() throws Exception {
-        File outputDir = outDir;
+        File outputDir = configuration.getBuildDir();
         outputDir.mkdirs();
 
         for(File f : getSassFiles()) {
             ScssStylesheet sass = ScssStylesheet.get(f.getAbsolutePath());
             sass.setFile(f);
             sass.setCharset("UTF-8"); // TODO: inteligent
-            sass.addResolver(new FilesystemResolver(srcDir.getAbsolutePath()));
+            sass.addResolver(new FilesystemResolver(configuration.getSrcDir().getAbsolutePath()));
             sass.compile();
             OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(
                     new File(outputDir.getAbsolutePath() + File.separator + f.getName().replaceAll("\\.scss",".css"))
             ));
-            sass.write(out,minify);
+            sass.write(out,configuration.getMinify());
             out.close();
         }
     }
 
-    public File getSrcDir() {
-        return srcDir;
+    public SassBuildConfiguration getConfiguration() {
+        return configuration;
     }
 
-    public void setSrcDir(File srcDir) {
-        this.srcDir = srcDir;
-    }
-
-    public File getOutDir() {
-        return outDir;
-    }
-
-    public void setOutDir(File outDir) {
-        this.outDir = outDir;
-    }
-
-    public String getInclude() {
-        return include;
-    }
-
-    public void setInclude(String include) {
-        this.include = include;
-    }
-
-    public String getExclude() {
-        return exclude;
-    }
-
-    public void setExclude(String exclude) {
-        this.exclude = exclude;
-    }
-
-    public Boolean getMinify() {
-        return minify;
-    }
-
-    public void setMinify(Boolean minify) {
-        this.minify = minify;
+    public void setConfiguration(SassBuildConfiguration configuration) {
+        this.configuration = configuration;
     }
 }

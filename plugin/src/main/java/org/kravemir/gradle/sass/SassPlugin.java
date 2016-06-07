@@ -11,24 +11,19 @@ import java.util.Collections;
 public class SassPlugin implements Plugin<Project>{
     @Override
     public void apply(Project project) {
-        DomainObjectCollection<SassBuildConfiguration> sassBuildConfigurations = project.container(SassBuildConfiguration.class);
+        DomainObjectCollection<SassBuildResourceSet> sassBuildConfigurations = project.container(SassBuildResourceSet.class);
         project.getExtensions().add("sass", sassBuildConfigurations);
 
         project.afterEvaluate(p -> sassBuildConfigurations.all(build -> {
             project.getTasks().create(build.getName() + "Sass", SassCompileTask.class, t -> {
                 t.setGroup("sass");
-                t.setSrcDir(build.getSrcDir());
-                t.setOutDir(build.getBuildDir());
-                t.setInclude(build.getInclude());
-                t.setExclude(build.getExclude());
-                t.setMinify(build.getMinify());
-
+                t.setConfiguration(build);
                 registerInSourceSets(project,build,t);
             });
         }));
     }
 
-    private void registerInSourceSets(Project project, SassBuildConfiguration build, SassCompileTask task) {
+    private void registerInSourceSets(Project project, SassBuildResourceSet build, SassCompileTask task) {
         if(build.getRegisterInSourceSets() == null || build.getRegisterInSourceSets().length == 0) return;
 
         try {

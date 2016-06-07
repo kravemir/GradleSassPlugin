@@ -1,9 +1,11 @@
 package org.kravemir.gradle.sass;
 
+import org.kravemir.gradle.sass.api.SassBuildConfiguration;
+
 import java.io.File;
 import java.nio.file.Paths;
 
-public class SassBuildConfiguration {
+public class SassBuildResourceSet implements SassBuildConfiguration {
     private final String name;
 
     private File srcDir;
@@ -17,10 +19,11 @@ public class SassBuildConfiguration {
 
     private String[] registerInSourceSets = null;
 
-    public SassBuildConfiguration(String name) {
+    public SassBuildResourceSet(String name) {
         this.name = name;
     }
 
+    @Override
     public File getBuildDir() {
         if(outSubDir != null)
             return Paths.get(outDir.getPath(), outSubDir).toFile();
@@ -31,6 +34,7 @@ public class SassBuildConfiguration {
         return name;
     }
 
+    @Override
     public File getSrcDir() {
         return srcDir;
     }
@@ -55,6 +59,7 @@ public class SassBuildConfiguration {
         this.outSubDir = outSubDir;
     }
 
+    @Override
     public String getInclude() {
         return include;
     }
@@ -63,6 +68,7 @@ public class SassBuildConfiguration {
         this.include = include;
     }
 
+    @Override
     public String getExclude() {
         return exclude;
     }
@@ -71,6 +77,7 @@ public class SassBuildConfiguration {
         this.exclude = exclude;
     }
 
+    @Override
     public boolean getMinify() {
         return minify;
     }
