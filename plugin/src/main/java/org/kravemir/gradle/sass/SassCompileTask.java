@@ -34,7 +34,6 @@ public class SassCompileTask extends DefaultTask {
     public SassCompileTask() {
     }
 
-    @InputFiles
     FileCollection getSassFiles() {
         if(srcDir.exists() == false)
             throw new RuntimeException("srcDir doesn't exists");
@@ -47,6 +46,17 @@ public class SassCompileTask extends DefaultTask {
         if(exclude != null)
             fileTree.exclude(exclude);
 
+        return fileTree;
+    }
+
+    @InputFiles
+    FileCollection getInputFiles() {
+        if(srcDir.exists() == false)
+            throw new RuntimeException("srcDir doesn't exists");
+        if(srcDir.isDirectory() == false)
+            throw new RuntimeException("srcDir isn't directory");
+
+        ConfigurableFileTree fileTree = getProject().fileTree(srcDir);
         return fileTree;
     }
 
