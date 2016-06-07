@@ -4,7 +4,7 @@ buildscript {
         mavenLocal()
     }
     dependencies {
-        classpath group: 'org.kravemir.gradle.sass', name: 'GradleSassPlugin', version: '1.0'
+        classpath group: 'org.kravemir.gradle.sass', name: 'GradleSassPlugin', version: '1.1-SNAPSHOT'
     }
 }
 
@@ -14,8 +14,9 @@ apply plugin: 'org.kravemir.gradle.sass'
 sass {
     main {
         srcDir = file("$projectDir/src/main/sass")
-        outDir = file("$buildDir/dev-css")
+        outDir = file("$projectDir/build/generated/resources")
 
+        outSubDir = "css"
         registerInSourceSets = [ 'main' ]
     }
 }

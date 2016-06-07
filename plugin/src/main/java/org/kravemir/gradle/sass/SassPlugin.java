@@ -18,7 +18,7 @@ public class SassPlugin implements Plugin<Project>{
             project.getTasks().create(build.getName() + "Sass", SassCompileTask.class, t -> {
                 t.setGroup("sass");
                 t.setSrcDir(build.getSrcDir());
-                t.setOutDir(build.getOutDir());
+                t.setOutDir(build.getBuildDir());
                 t.setInclude(build.getInclude());
                 t.setExclude(build.getExclude());
                 t.setMinify(build.getMinify());
