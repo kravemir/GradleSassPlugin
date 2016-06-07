@@ -3,13 +3,17 @@ GradleSassPlugin
 
 Plugin for SASS compilation. It uses [vaadin-sass-compiler](https://github.com/vaadin/sass-compiler).
 
+* [About](#about)
+* [Usage](#usage)
+  * [Configuration](#configuration)
+
 About
 -----
 
 Main features (besides SASS compilation):
 
-* sultiple build configurations support
-* various options, [see](#options)
+* multiple build configurations support
+* various options, [see](#configuration)
 * ... something missing? raise an issue for feature request :-) ...
 
 Usage
@@ -60,7 +64,7 @@ Build and compilation related properties:
 
 | Name                       | Description                                                                          |
 | -------------------------- | ------------------------------------------------------------------------------------ |
-| **`outSubDir`**            | relative path for generated files withing `outDir` used together with `registerInSourceSets`
+| **`outSubDir`**            | relative path for generated files within `outDir`, used together with `registerInSourceSets`
 | **`include`**              | pattern defining files to compile
 | **`exclude`**              | pattern defining excluded files from compilation (they can still be `@import-ed`)
 | **`minify`**               | minifies compiled files within build configuration                                   |
