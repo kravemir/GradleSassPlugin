@@ -6,7 +6,7 @@ import java.io.File;
  * Created by miroslav on 6/7/16.
  */
 public interface SassBuildConfiguration {
-    File getBuildDir();
+    File getBuildOutDir();
 
     File getSrcDir();
 

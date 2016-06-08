@@ -1,11 +1,12 @@
 buildscript {
     repositories {
+        mavenLocal()
         maven {
             url "https://plugins.gradle.org/m2/"
         }
     }
     dependencies {
-        classpath 'gradle.plugin.org.kravemir.gradle.sass:GradleSassPlugin:1.1'
+        classpath 'org.kravemir.gradle.sass:GradleSassPlugin:1.2-SNAPSHOT'
     }
 }
 
@@ -15,7 +16,7 @@ apply plugin: 'org.kravemir.gradle.sass'
 sass{
     main {
         srcDir = file("$projectDir/src/main/sass")
-        outDir = file("$projectDir/build/generated/resources")
+        outDir = file("$buildDir/generated/resources")
 
         outSubDir = "css"
         registerInSourceSets = [ 'main' ]

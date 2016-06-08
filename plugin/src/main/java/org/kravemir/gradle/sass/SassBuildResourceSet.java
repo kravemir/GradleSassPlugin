@@ -24,7 +24,7 @@ public class SassBuildResourceSet implements SassBuildConfiguration {
     }
 
     @Override
-    public File getBuildDir() {
+    public File getBuildOutDir() {
         if(outSubDir != null)
             return Paths.get(outDir.getPath(), outSubDir).toFile();
         return outDir;

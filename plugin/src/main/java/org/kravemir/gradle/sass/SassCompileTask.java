@@ -54,12 +54,12 @@ public class SassCompileTask extends DefaultTask {
 
     @OutputDirectory
     File getOutputDirectory() {
-        return getConfiguration().getBuildDir();
+        return getConfiguration().getBuildOutDir();
     }
 
     @TaskAction
     void compile() throws Exception {
-        File outputDir = configuration.getBuildDir();
+        File outputDir = configuration.getBuildOutDir();
         outputDir.mkdirs();
 
         for(File f : getSassFiles()) {
