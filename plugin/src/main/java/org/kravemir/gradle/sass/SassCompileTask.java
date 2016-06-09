@@ -1,84 +1,32 @@
 package org.kravemir.gradle.sass;
 
-import com.vaadin.sass.internal.ScssStylesheet;
-import com.vaadin.sass.internal.resolver.FilesystemResolver;
-import org.gradle.api.DefaultTask;
-import org.gradle.api.file.ConfigurableFileTree;
-import org.gradle.api.file.FileCollection;
-import org.gradle.api.tasks.InputFiles;
-import org.gradle.api.tasks.OutputDirectory;
-import org.gradle.api.tasks.TaskAction;
+import org.gradle.api.GradleException;
+import org.gradle.api.plugins.JavaPluginConvention;
 
-import javax.inject.Inject;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
+import java.nio.file.Paths;
+import java.util.Collections;
 
-/**
- * Created by miroslav on 4/23/16.
- */
-public class SassCompileTask extends DefaultTask {
-
-
+public class SassCompileTask extends AbstractSassCompileTask {
     private File srcDir;
-
-    @OutputDirectory
     private File outDir;
+    private String outSubDir = null;
 
-    private String include = "**/*.scss";
-    private String exclude = "**/_*";
+    private String include = null;
+    private String exclude = null;
 
-    Boolean minify = false;
+    private boolean minify = false;
 
-    @Inject
-    public SassCompileTask() {
+    private SassCompileTask task = null;
+
+    @Override
+    public File getOutputDirectory() {
+        if(outSubDir != null)
+            return Paths.get(outDir.getPath(), outSubDir).toFile();
+        return outDir;
     }
 
-    FileCollection getSassFiles() {
-        if(srcDir.exists() == false)
-            throw new RuntimeException("srcDir doesn't exists");
-        if(srcDir.isDirectory() == false)
-            throw new RuntimeException("srcDir isn't directory");
-
-        ConfigurableFileTree fileTree = getProject().fileTree(srcDir);
-        if(include != null)
-            fileTree.include(include);
-        if(exclude != null)
-            fileTree.exclude(exclude);
-
-        return fileTree;
-    }
-
-    @InputFiles
-    FileCollection getInputFiles() {
-        if(srcDir.exists() == false)
-            throw new RuntimeException("srcDir doesn't exists");
-        if(srcDir.isDirectory() == false)
-            throw new RuntimeException("srcDir isn't directory");
-
-        ConfigurableFileTree fileTree = getProject().fileTree(srcDir);
-        return fileTree;
-    }
-
-    @TaskAction
-    void compile() throws Exception {
-        File outputDir = outDir;
-        outputDir.mkdirs();
-
-        for(File f : getSassFiles()) {
-            ScssStylesheet sass = ScssStylesheet.get(f.getAbsolutePath());
-            sass.setFile(f);
-            sass.setCharset("UTF-8"); // TODO: inteligent
-            sass.addResolver(new FilesystemResolver(srcDir.getAbsolutePath()));
-            sass.compile();
-            OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(
-                    new File(outputDir.getAbsolutePath() + File.separator + f.getName().replaceAll("\\.scss",".css"))
-            ));
-            sass.write(out,minify);
-            out.close();
-        }
-    }
-
+    @Override
     public File getSrcDir() {
         return srcDir;
     }
@@ -95,6 +43,15 @@ public class SassCompileTask extends DefaultTask {
         this.outDir = outDir;
     }
 
+    public String getOutSubDir() {
+        return outSubDir;
+    }
+
+    public void setOutSubDir(String outSubDir) {
+        this.outSubDir = outSubDir;
+    }
+
+    @Override
     public String getInclude() {
         return include;
     }
@@ -103,6 +60,7 @@ public class SassCompileTask extends DefaultTask {
         this.include = include;
     }
 
+    @Override
     public String getExclude() {
         return exclude;
     }
@@ -111,11 +69,33 @@ public class SassCompileTask extends DefaultTask {
         this.exclude = exclude;
     }
 
-    public Boolean getMinify() {
+    @Override
+    public boolean getMinify() {
         return minify;
     }
 
-    public void setMinify(Boolean minify) {
+    public void setMinify(boolean minify) {
         this.minify = minify;
     }
+
+    public void registerInSourceSets(String ...sourceSetNames) {
+        if (sourceSetNames == null || sourceSetNames.length == 0) return;
+
+        try {
+            JavaPluginConvention javaPlugin = getProject().getConvention().getPlugin(JavaPluginConvention.class);
+            if (javaPlugin == null) {
+                throw new GradleException("You must apply the java plugin if you're using 'registerInSourceSets' functionality.");
+            }
+
+            for (String sourceSet : sourceSetNames) {
+                javaPlugin.getSourceSets().getByName(sourceSet).getOutput().dir(
+                        Collections.singletonMap("builtBy", task),
+                        getOutDir()
+                );
+            }
+        } catch (Exception e) {
+            throw new GradleException("You must apply the java plugin if you're using 'registerInSourceSets' functionality.");
+        }
+    }
+
 }

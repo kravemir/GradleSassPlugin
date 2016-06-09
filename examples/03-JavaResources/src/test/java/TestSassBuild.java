@@ -6,6 +6,6 @@ public class TestSassBuild {
 
     @Test
     public void checkResourceOnClasspath() throws Exception {
-        assertNotNull(getClass().getResource("main.css"));
+        assertNotNull(getClass().getResource("css/main.css"));
     }
 }
