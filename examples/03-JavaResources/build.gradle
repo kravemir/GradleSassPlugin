@@ -6,7 +6,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'org.kravemir.gradle.sass:GradleSassPlugin:1.2.1-SNAPSHOT'
+        classpath 'org.kravemir.gradle.sass:GradleSassPlugin:1.2.2-SNAPSHOT'
     }
 }
 
@@ -19,7 +19,7 @@ sass{
         outDir = file("$buildDir/generated/resources")
 
         outSubDir = "css"
-        registerInSourceSets = [ 'main' ]
+        registerInSourceSets ( 'main' )
     }
 }
 

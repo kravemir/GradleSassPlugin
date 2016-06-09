@@ -7,14 +7,11 @@ public class SassPlugin implements Plugin<Project> {
     @Override
     public void apply(Project project) {
         project.getExtensions().add("sass", project.container(
-                SassBuildResourceSet.class,
+                SassCompileTask.class,
                 name -> {
-                    SassBuildResourceSet build = new SassBuildResourceSet(project, name);
                     SassCompileTask task = project.getTasks().create(name + "Sass", SassCompileTask.class);
                     task.setGroup("sass");
-                    task.setConfiguration(build);
-                    build.setTask(task);
-                    return build;
+                    return task;
                 }
         ));
     }

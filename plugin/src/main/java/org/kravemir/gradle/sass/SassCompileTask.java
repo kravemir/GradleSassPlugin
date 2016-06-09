@@ -1,82 +1,101 @@
 package org.kravemir.gradle.sass;
 
-import com.vaadin.sass.internal.ScssStylesheet;
-import com.vaadin.sass.internal.resolver.FilesystemResolver;
-import org.gradle.api.DefaultTask;
-import org.gradle.api.file.ConfigurableFileTree;
-import org.gradle.api.file.FileCollection;
-import org.gradle.api.tasks.InputFiles;
-import org.gradle.api.tasks.OutputDirectory;
-import org.gradle.api.tasks.TaskAction;
-import org.kravemir.gradle.sass.api.SassBuildConfiguration;
+import org.gradle.api.GradleException;
+import org.gradle.api.plugins.JavaPluginConvention;
 
-import javax.inject.Inject;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
+import java.nio.file.Paths;
+import java.util.Collections;
 
-/**
- * Created by miroslav on 4/23/16.
- */
-public class SassCompileTask extends DefaultTask {
+public class SassCompileTask extends AbstractSassCompileTask {
+    private File srcDir;
+    private File outDir;
+    private String outSubDir = null;
 
-    private SassBuildConfiguration configuration;
+    private String include = null;
+    private String exclude = null;
 
-    FileCollection getSassFiles() {
-        if(configuration.getSrcDir().exists() == false)
-            throw new RuntimeException("srcDir doesn't exists");
-        if(configuration.getSrcDir().isDirectory() == false)
-            throw new RuntimeException("srcDir isn't directory");
+    private boolean minify = false;
 
-        ConfigurableFileTree fileTree = getProject().fileTree(configuration.getSrcDir());
-        if(configuration.getInclude() != null)
-            fileTree.include(configuration.getInclude());
-        if(configuration.getExclude() != null)
-            fileTree.exclude(configuration.getExclude());
+    private SassCompileTask task = null;
 
-        return fileTree;
+    @Override
+    public File getOutputDirectory() {
+        if(outSubDir != null)
+            return Paths.get(outDir.getPath(), outSubDir).toFile();
+        return outDir;
     }
 
-    @InputFiles
-    FileCollection getInputFiles() {
-        if(configuration.getSrcDir().exists() == false)
-            throw new RuntimeException("srcDir doesn't exists");
-        if(configuration.getSrcDir().isDirectory() == false)
-            throw new RuntimeException("srcDir isn't directory");
-
-        ConfigurableFileTree fileTree = getProject().fileTree(configuration.getSrcDir());
-        return fileTree;
+    @Override
+    public File getSrcDir() {
+        return srcDir;
     }
 
-    @OutputDirectory
-    File getOutputDirectory() {
-        return getConfiguration().getBuildOutDir();
+    public void setSrcDir(File srcDir) {
+        this.srcDir = srcDir;
     }
 
-    @TaskAction
-    void compile() throws Exception {
-        File outputDir = configuration.getBuildOutDir();
-        outputDir.mkdirs();
+    public File getOutDir() {
+        return outDir;
+    }
 
-        for(File f : getSassFiles()) {
-            ScssStylesheet sass = ScssStylesheet.get(f.getAbsolutePath());
-            sass.setFile(f);
-            sass.setCharset("UTF-8"); // TODO: inteligent
-            sass.addResolver(new FilesystemResolver(configuration.getSrcDir().getAbsolutePath()));
-            sass.compile();
-            OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(
-                    new File(outputDir.getAbsolutePath() + File.separator + f.getName().replaceAll("\\.scss",".css"))
-            ));
-            sass.write(out,configuration.getMinify());
-            out.close();
+    public void setOutDir(File outDir) {
+        this.outDir = outDir;
+    }
+
+    public String getOutSubDir() {
+        return outSubDir;
+    }
+
+    public void setOutSubDir(String outSubDir) {
+        this.outSubDir = outSubDir;
+    }
+
+    @Override
+    public String getInclude() {
+        return include;
+    }
+
+    public void setInclude(String include) {
+        this.include = include;
+    }
+
+    @Override
+    public String getExclude() {
+        return exclude;
+    }
+
+    public void setExclude(String exclude) {
+        this.exclude = exclude;
+    }
+
+    @Override
+    public boolean getMinify() {
+        return minify;
+    }
+
+    public void setMinify(boolean minify) {
+        this.minify = minify;
+    }
+
+    public void registerInSourceSets(String ...sourceSetNames) {
+        if (sourceSetNames == null || sourceSetNames.length == 0) return;
+
+        try {
+            JavaPluginConvention javaPlugin = getProject().getConvention().getPlugin(JavaPluginConvention.class);
+            if (javaPlugin == null) {
+                throw new GradleException("You must apply the java plugin if you're using 'registerInSourceSets' functionality.");
+            }
+
+            for (String sourceSet : sourceSetNames) {
+                javaPlugin.getSourceSets().getByName(sourceSet).getOutput().dir(
+                        Collections.singletonMap("builtBy", task),
+                        getOutDir()
+                );
+            }
+        } catch (Exception e) {
+            throw new GradleException("You must apply the java plugin if you're using 'registerInSourceSets' functionality.");
         }
     }
 
-    public SassBuildConfiguration getConfiguration() {
-        return configuration;
-    }
-
-    public void setConfiguration(SassBuildConfiguration configuration) {
-        this.configuration = configuration;
-    }
 }
