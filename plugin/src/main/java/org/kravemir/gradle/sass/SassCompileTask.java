@@ -22,10 +22,6 @@ public class SassCompileTask extends DefaultTask {
 
     private SassBuildConfiguration configuration;
 
-    @Inject
-    public SassCompileTask() {
-    }
-
     FileCollection getSassFiles() {
         if(configuration.getSrcDir().exists() == false)
             throw new RuntimeException("srcDir doesn't exists");
