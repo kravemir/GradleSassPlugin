@@ -6,7 +6,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'org.kravemir.gradle.sass:GradleSassPlugin:1.2-SNAPSHOT'
+        classpath "gradle.plugin.org.kravemir.gradle.sass:GradleSassPlugin:1.2"
     }
 }
 
