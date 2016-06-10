@@ -5,7 +5,11 @@ Plugin for SASS compilation. It uses [vaadin-sass-compiler](https://github.com/v
 
 * [About](#about)
 * [Usage](#usage)
+  * [Including in your project](#including-in-your-project)
+  * [Simple configuration with extensions](#simple-configuration-with-extensions)
+  * [Using as task](#using-as-task)
   * [Configuration](#configuration)
+* [License](#license)
 
 About
 -----
@@ -19,7 +23,7 @@ Main features (besides SASS compilation):
 Usage
 -----
 
-Including in your project:
+### Including in your project
 
 ```gradle
 buildscript {
@@ -29,7 +33,7 @@ buildscript {
     }
   }
   dependencies {
-    classpath "gradle.plugin.org.kravemir.gradle.sass:GradleSassPlugin:1.1"
+    classpath "gradle.plugin.org.kravemir.gradle.sass:GradleSassPlugin:1.2"
   }
 }
 
@@ -38,10 +42,12 @@ apply plugin: "org.kravemir.gradle.sass"
 Or with new the plugin mechanism:
 ```gradle
 plugins {
-  id "org.kravemir.gradle.sass" version "1.1"
+  id "org.kravemir.gradle.sass" version "1.2"
 }
 ```
-And, HelloSass configuration:
+
+### Simple configuration with extensions
+
 ```
 sass {
     main {
@@ -51,27 +57,40 @@ sass {
 }
 ```
 
+### Using as task
+
+You may declare new tasks directly using `SassCompileTask` class,
+without applying plugin, just make sure to have correctly set `buildscript`.
+
 ### Configuration
 
-Required properties:
+Source and output configuration:
 
 | Name                       | Description                                                                          |
 | -------------------------- | ------------------------------------------------------------------------------------ |
-| **`srcDir`**               | source directory containing sass files
-| **`outDir`**               | output directory for generated resource/css files
-
-Build and compilation related properties:
-
-| Name                       | Description                                                                          |
-| -------------------------- | ------------------------------------------------------------------------------------ |
+| **`srcDir`** *(required)*  | source directory containing sass files
+| **`outDir`** *(required)*  | output directory for generated resource/css files
 | **`outSubDir`**            | relative path for generated files within `outDir`, used together with `registerInSourceSets`
 | **`include`**              | pattern defining files to compile
 | **`exclude`**              | pattern defining excluded files from compilation (they can still be `@import-ed`)
+
+Compilation properties:
+
+| Name                       | Description                                                                          |
+| -------------------------- | ------------------------------------------------------------------------------------ |
 | **`minify`**               | minifies compiled files within build configuration                                   |
 
 
-Properties defining integration with java:
+Properties for integration with Java:
 
 | Name                       | Description                                                                          |
 | -------------------------- | ------------------------------------------------------------------------------------ |
 | **`registerInSourceSets`** | list of sourceSet names to which `outDir` should be registered (affects classpath), [see example build.gradle](examples/03-JavaResources/build.gradle) |
+
+
+License
+-------
+
+Whole project(plugin) is licensed under [MIT license](LICENSE).
+So, you're free to apply gradle plugin in commercial project.
+You may also modify and redistribute the source, but with few limitations - see license.
