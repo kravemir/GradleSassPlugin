@@ -13,6 +13,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 
+/**
+ * Abstract and reusable Sass Compilation Task
+ * @author Miroslav Kravec
+ */
 public abstract class AbstractSassCompileTask extends DefaultTask {
     FileCollection getSassFiles() {
         if(getSrcDir().exists() == false)
@@ -59,11 +63,29 @@ public abstract class AbstractSassCompileTask extends DefaultTask {
         }
     }
 
+    /**
+     * @return directory, where compiled CSS files are written
+     */
     @OutputDirectory
     protected abstract File getOutputDirectory();
 
+    /**
+     * @return source directory, where SASS files are searched
+     */
     protected abstract File getSrcDir();
+
+    /**
+     * @return pattern defining files to include in compilation as SASS root file
+     */
     protected abstract String getInclude();
+
+    /**
+     * @return pattern defining to exclude files as SASS root
+     */
     protected abstract String getExclude();
+
+    /**
+     * @return boolean, defines whether CSS files should be minified
+     */
     protected abstract boolean getMinify();
 }
