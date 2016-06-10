@@ -7,6 +7,10 @@ import java.io.File;
 import java.nio.file.Paths;
 import java.util.Collections;
 
+/**
+ * Concrete implementation of {@link AbstractSassCompileTask}
+ * @author Miroslav Kravec
+ */
 public class SassCompileTask extends AbstractSassCompileTask {
     private File srcDir;
     private File outDir;
