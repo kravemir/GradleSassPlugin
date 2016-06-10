@@ -21,8 +21,6 @@ public class SassCompileTask extends AbstractSassCompileTask {
 
     private boolean minify = false;
 
-    private SassCompileTask task = null;
-
     @Override
     public File getOutputDirectory() {
         if(outSubDir != null)
@@ -93,7 +91,7 @@ public class SassCompileTask extends AbstractSassCompileTask {
 
             for (String sourceSet : sourceSetNames) {
                 javaPlugin.getSourceSets().getByName(sourceSet).getOutput().dir(
-                        Collections.singletonMap("builtBy", task),
+                        Collections.singletonMap("builtBy", this),
                         getOutDir()
                 );
             }
