@@ -12,24 +12,32 @@ import java.util.Collections;
  * @author Miroslav Kravec
  */
 public class SassCompileTask extends AbstractSassCompileTask {
-    private File srcDir;
-    private File outDir;
+    private File srcDir = null;
+    private File outDir = null;
     private String outSubDir = null;
 
     private String include = null;
     private String exclude = null;
 
     private boolean minify = false;
+    private String sassSetName;
 
     @Override
     public File getOutputDirectory() {
+        File outDir = this.getOutDir();
+        if(outDir == null)
+            outDir = Paths.get(getProject().getBuildDir().getPath(), "sass", sassSetName).toFile();
+
         if(outSubDir != null)
             return Paths.get(outDir.getPath(), outSubDir).toFile();
+
         return outDir;
     }
 
     @Override
     public File getSrcDir() {
+        if(srcDir == null)
+            return Paths.get(getProject().getProjectDir().getPath(), "src", sassSetName, "sass").toFile();
         return srcDir;
     }
 
@@ -100,4 +108,7 @@ public class SassCompileTask extends AbstractSassCompileTask {
         }
     }
 
+    public void setSassSetName(String sassSetName) {
+        this.sassSetName = sassSetName;
+    }
 }

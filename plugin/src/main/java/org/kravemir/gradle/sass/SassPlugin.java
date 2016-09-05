@@ -14,7 +14,10 @@ public class SassPlugin implements Plugin<Project> {
     public void apply(Project project) {
         project.getExtensions().add("sass", project.container(
                 SassCompileTask.class,
-                name -> project.getTasks().create(name + "Sass", SassCompileTask.class, task -> task.setGroup("sass"))
+                name -> project.getTasks().create(name + "Sass", SassCompileTask.class, task -> {
+                    task.setSassSetName(name);
+                    task.setGroup("sass");
+                })
         ));
     }
 }

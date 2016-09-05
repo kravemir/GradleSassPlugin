@@ -12,6 +12,8 @@ import org.gradle.api.tasks.TaskAction;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * Abstract and reusable Sass Compilation Task
@@ -49,17 +51,21 @@ public abstract class AbstractSassCompileTask extends DefaultTask {
         File outputDir = getOutputDirectory();
         outputDir.mkdirs();
 
+        Path srcDirPath = getSrcDir().toPath();
+
         for(File f : getSassFiles()) {
-            ScssStylesheet sass = ScssStylesheet.get(f.getAbsolutePath());
-            sass.setFile(f);
-            sass.setCharset("UTF-8"); // TODO: inteligent
-            sass.addResolver(new FilesystemResolver(getSrcDir().getAbsolutePath()));
-            sass.compile();
-            OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(
-                    new File(outputDir.getAbsolutePath() + File.separator + f.getName().replaceAll("\\.scss",".css"))
-            ));
-            sass.write(out,getMinify());
-            out.close();
+            Path relativePath = srcDirPath.relativize(f.toPath());
+            File outputFile = new File(outputDir,relativePath.toString().replaceAll("\\.scss",".css"));
+            outputFile.getParentFile().mkdirs();
+
+            try(OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(outputFile))) {
+                ScssStylesheet sass = ScssStylesheet.get(f.getAbsolutePath());
+                sass.setFile(f);
+                sass.setCharset("UTF-8"); // TODO: inteligent
+                sass.addResolver(new FilesystemResolver(getSrcDir().getAbsolutePath()));
+                sass.compile();
+                sass.write(out,getMinify());
+            }
         }
     }
 

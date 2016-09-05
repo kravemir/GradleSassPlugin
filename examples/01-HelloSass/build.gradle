@@ -6,15 +6,13 @@ buildscript {
         }
     }
     dependencies {
-        classpath "gradle.plugin.org.kravemir.gradle.sass:GradleSassPlugin:1.2"
+        classpath "org.kravemir.gradle.sass:GradleSassPlugin:1.2.2-SNAPSHOT1"
+        //classpath "gradle.plugin.org.kravemir.gradle.sass:GradleSassPlugin:1.2.2"
     }
 }
 
 apply plugin: 'org.kravemir.gradle.sass'
 
 sass {
-    main {
-        srcDir = file("$projectDir/src/main/sass")
-        outDir = file("$buildDir/css")
-    }
+    main {}
 }
