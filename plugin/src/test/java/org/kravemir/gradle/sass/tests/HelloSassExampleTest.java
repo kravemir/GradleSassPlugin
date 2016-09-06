@@ -3,6 +3,7 @@ package org.kravemir.gradle.sass.tests;
 import org.apache.commons.io.FileUtils;
 import org.gradle.testkit.runner.BuildResult;
 import org.gradle.testkit.runner.GradleRunner;
+import org.gradle.testkit.runner.TaskOutcome;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -15,6 +16,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.regex.Pattern;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -59,7 +61,8 @@ public class HelloSassExampleTest {
                 .withPluginClasspath()
                 .build();
 
-        // check .css files exist
+        assertEquals("check that ':mainSass' task succeeded", result.task(":mainSass").getOutcome(),TaskOutcome.SUCCESS);
+
         Path mainSassBuildRoot = Paths.get(testProjectDir.getRoot().getPath(), "build", "sass", "main");
         assertTrue(mainSassBuildRoot.resolve(Paths.get("main.css")).toFile().exists());
         assertTrue(mainSassBuildRoot.resolve(Paths.get("relPath","foo.css")).toFile().exists());
