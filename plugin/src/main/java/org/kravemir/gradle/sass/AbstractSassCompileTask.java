@@ -8,6 +8,7 @@ import org.gradle.api.file.FileCollection;
 import org.gradle.api.tasks.InputFiles;
 import org.gradle.api.tasks.OutputDirectory;
 import org.gradle.api.tasks.TaskAction;
+import org.gradle.api.tasks.incremental.IncrementalTaskInputs;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -47,15 +48,24 @@ public abstract class AbstractSassCompileTask extends DefaultTask {
     }
 
     @TaskAction
-    void compile() throws Exception {
+    void compile(IncrementalTaskInputs incrementalTaskInputs) throws Exception {
         File outputDir = getOutputDirectory();
         outputDir.mkdirs();
 
         Path srcDirPath = getSrcDir().toPath();
 
+        // only delete removed files
+        if(incrementalTaskInputs.isIncremental()) {
+            incrementalTaskInputs.outOfDate(inputFileDetails -> {});
+            incrementalTaskInputs.removed(inputFileDetails -> {
+                File outputFile = getOutputFile(srcDirPath,outputDir,inputFileDetails.getFile());
+                if(outputFile.exists())
+                    outputFile.delete();
+            });
+        }
+
         for(File f : getSassFiles()) {
-            Path relativePath = srcDirPath.relativize(f.toPath());
-            File outputFile = new File(outputDir,relativePath.toString().replaceAll("\\.scss",".css"));
+            File outputFile = getOutputFile(srcDirPath,outputDir,f);
             outputFile.getParentFile().mkdirs();
 
             try(OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(outputFile))) {
@@ -67,6 +77,11 @@ public abstract class AbstractSassCompileTask extends DefaultTask {
                 sass.write(out,getMinify());
             }
         }
+    }
+
+    private File getOutputFile(Path srcDirPath, File outputDir, File f) {
+        Path relativePath = srcDirPath.relativize(f.toPath());
+        return new File(outputDir,relativePath.toString().replaceAll("\\.scss",".css"));
     }
 
     /**
