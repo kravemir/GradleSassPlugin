@@ -9,6 +9,10 @@ buildscript {
     }
 }
 
+plugins {
+    id "org.sonarqube" version "2.6"
+}
+
 apply plugin: "com.gradle.plugin-publish"
 apply plugin: 'java'
 apply plugin: 'java-gradle-plugin'
