@@ -17,7 +17,7 @@ jdk:
   - oraclejdk8
 
 script:
-  - './gradlew plugin:sonarqube'
+  - sonar-scanner
 
 cache:
   directories:
