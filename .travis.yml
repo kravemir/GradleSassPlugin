@@ -8,6 +8,10 @@ addons:
     organization: "kravemir-github"
     token:
       secure: "qGKMWRaEHdZC1ceszs8SVsSRqpMTOXzXJ/nd63a0PvZ5DoRPZVsa1MnADucHxcNzhd6TlST/9lp6fReHwEA4Uny1xod9euYVtWH+f5WugAf5COjIkUgW+YXusYWHo2uVwvcf4g1dwOoEXJocf5LwoF1NqGHypBqqrWc/huMoamN+89uU59+RhkzSc3lPZ+gwFauObjNxv9SD2CBQLDGA6FOxTtvL4ZF/DA6ajp7hS/eouY+dkXcMuwImFVLfZ41lanzQ31wz8USrWc0ZACjDFp2epfpetl8sBarlD356IMI5lbl0gKZnmhydnozI0r87Wj3qKZC7Ex/3BGUqiTGdcsNvmTcJ07gCSoQ3IKdPubbyvPM934jR400CE8ZgEBeqnFOy4V840H4a6anFeq2sC4kN6MuQwyJOxLAQRuiaILUnDxk73UP5cVaHkVkVPs+l2uyKhgw1GlCM29Xp9LdrvM3irUjpXXdTKSVLfw3yPbjmQHMhSEOr9Qs9GmLwFoiC2SQLGR9XJc2zphHicvxYc1DHAHOTWqHsSwEiJdaM4S6SYkm1qVW93wA8nPsBkcYRzVGYq/DD1yuktQ3Vtqpn5fttvGpVeGiyOSrFR2LlCJR7zzYtx7d9FqsEDSJZYnOEe6qQjnO5VoPEp38t822H0n1DVVVEAP40qoxCnuXkUIQ="
+    branches:
+      - master
+      - develop
+      - sonarcloud
 
 jdk:
   - oraclejdk8
