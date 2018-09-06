@@ -94,6 +94,10 @@ Properties for integration with Java:
 License
 -------
 
-Whole project(plugin) is licensed under [MIT license](LICENSE).
+All published versions are licensed under MIT license.
 So, you're free to apply gradle plugin in commercial project.
-You may also modify and redistribute the source, but with few limitations - see license.
+
+The next release, and possible contributions, will be released under Apache 2.0 license. So, you'll be still free to apply gradle plugin in commercial project.
+
+
+You may also modify and redistribute the source, but with few limitations - see [license](LICENSE).
