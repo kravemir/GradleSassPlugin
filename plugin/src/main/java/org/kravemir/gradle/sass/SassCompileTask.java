@@ -2,6 +2,9 @@ package org.kravemir.gradle.sass;
 
 import org.gradle.api.GradleException;
 import org.gradle.api.plugins.JavaPluginConvention;
+import org.gradle.api.tasks.CacheableTask;
+import org.gradle.api.tasks.Internal;
+import org.gradle.api.tasks.OutputDirectory;
 
 import java.io.File;
 import java.nio.file.Paths;
@@ -11,6 +14,7 @@ import java.util.Collections;
  * Concrete implementation of {@link AbstractSassCompileTask}
  * @author Miroslav Kravec
  */
+@CacheableTask
 public class SassCompileTask extends AbstractSassCompileTask {
     private File srcDir = null;
     private File outDir = null;
@@ -25,8 +29,6 @@ public class SassCompileTask extends AbstractSassCompileTask {
     @Override
     public File getOutputDirectory() {
         File outDir = this.getOutDir();
-        if(outDir == null)
-            outDir = Paths.get(getProject().getBuildDir().getPath(), "sass", sassSetName).toFile();
 
         if(outSubDir != null)
             return Paths.get(outDir.getPath(), outSubDir).toFile();
@@ -45,14 +47,16 @@ public class SassCompileTask extends AbstractSassCompileTask {
         this.srcDir = srcDir;
     }
 
+    @OutputDirectory
     public File getOutDir() {
-        return outDir;
+        return outDir != null ? outDir : Paths.get(getProject().getBuildDir().getPath(), "sass", sassSetName).toFile();
     }
 
     public void setOutDir(File outDir) {
         this.outDir = outDir;
     }
 
+    @Internal
     public String getOutSubDir() {
         return outSubDir;
     }
