@@ -1,0 +1,35 @@
+ext.fillPom = { org.gradle.api.publish.maven.MavenPom pom, String name, String description ->
+    pom.withXml {
+
+        asNode().with {
+            // remove generated name and description
+            ((List) children()).findAll { it.name() =~ /.*name/ }.each { it.replaceNode {} }
+            ((List) children()).findAll { it.name() =~ /.*description/ }.each { it.replaceNode {} }
+
+            appendNode('name', name)
+            appendNode('description', description)
+            appendNode('url', 'https://github.com/kravemir/GradleSassPlugin/')
+
+            appendNode('licenses').with {
+                appendNode('license').with {
+                    appendNode('name', 'Apache License, Version 2.0')
+                    appendNode('url', 'https://www.apache.org/licenses/LICENSE-2.0.txt')
+                }
+            }
+
+            appendNode('developers').with {
+                appendNode('developer').with {
+                    appendNode('name', 'Miroslav Kravec')
+                    appendNode('email', 'kravec.miroslav@gmail.com')
+                    appendNode('organization', null)
+                }
+            }
+
+            appendNode('scm').with {
+                appendNode('connection', 'scm:git:git://github.com/kravemir/GradleSassPlugin.git')
+                appendNode('developerConnection', 'scm:git:ssh://github.com:kravemir/GradleSassPlugin.git')
+                appendNode('url', 'http://github.com/kravemir/GradleSassPlugin/tree/master')
+            }
+        }
+    }
+}
