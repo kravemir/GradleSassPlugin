@@ -5,9 +5,7 @@ import com.vaadin.sass.internal.resolver.FilesystemResolver;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.file.ConfigurableFileTree;
 import org.gradle.api.file.FileCollection;
-import org.gradle.api.tasks.InputFiles;
-import org.gradle.api.tasks.OutputDirectory;
-import org.gradle.api.tasks.TaskAction;
+import org.gradle.api.tasks.*;
 import org.gradle.api.tasks.incremental.IncrementalTaskInputs;
 
 import java.io.File;
@@ -20,7 +18,11 @@ import java.nio.file.Paths;
  * Abstract and reusable Sass Compilation Task
  * @author Miroslav Kravec
  */
+@CacheableTask
 public abstract class AbstractSassCompileTask extends DefaultTask {
+
+    @InputFiles
+    @PathSensitive(PathSensitivity.RELATIVE)
     FileCollection getSassFiles() {
         if(getSrcDir().exists() == false)
             throw new RuntimeException("srcDir doesn't exists");
@@ -36,7 +38,7 @@ public abstract class AbstractSassCompileTask extends DefaultTask {
         return fileTree;
     }
 
-    @InputFiles
+    @Internal
     FileCollection getInputFiles() {
         if(getSrcDir().exists() == false)
             throw new RuntimeException("srcDir doesn't exists");
@@ -93,20 +95,25 @@ public abstract class AbstractSassCompileTask extends DefaultTask {
     /**
      * @return source directory, where SASS files are searched
      */
+    @InputDirectory
+    @PathSensitive(PathSensitivity.RELATIVE)
     protected abstract File getSrcDir();
 
     /**
      * @return pattern defining files to include in compilation as SASS root file
      */
+    @Internal
     protected abstract String getInclude();
 
     /**
      * @return pattern defining to exclude files as SASS root
      */
+    @Internal
     protected abstract String getExclude();
 
     /**
      * @return boolean, defines whether CSS files should be minified
      */
+    @Input
     protected abstract boolean getMinify();
 }
