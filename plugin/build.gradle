@@ -5,19 +5,27 @@ buildscript {
         }
     }
     dependencies {
-        classpath "com.gradle.publish:plugin-publish-plugin:0.9.4"
+        classpath "com.gradle.publish:plugin-publish-plugin:0.10.0"
     }
 }
 
-apply plugin: "com.gradle.plugin-publish"
 apply plugin: 'java'
+apply plugin: 'maven-publish'
 apply plugin: 'java-gradle-plugin'
-apply plugin: 'maven'
+apply plugin: "com.gradle.plugin-publish"
+
+apply from: "${rootDir}/gradle/publishing.gradle"
 
 group 'org.kravemir.gradle.sass'
 version '1.2.4-SNAPSHOT'
 
 sourceCompatibility = 1.8
+
+ext {
+    publishingEnabled = project.hasProperty("enablePublishing")
+    sonatypeUsername = project.hasProperty('sonatypeUsername') ? project.getProperty('sonatypeUsername') : ''
+}
+
 
 repositories {
     mavenCentral()
@@ -32,12 +40,14 @@ dependencies {
     testCompile gradleTestKit()
 }
 
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            repository(url: mavenLocal().url)
-        }
-    }
+task sourceJar(type: Jar, dependsOn: classes) {
+    classifier 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
 }
 
 pluginBundle {
@@ -46,11 +56,32 @@ pluginBundle {
     vcsUrl = 'https://github.com/kravemir/GradleSassPlugin'
     description = 'Sass Plugin with support for multiple build configurations within project'
     tags = ['sass', 'scss', 'kravemir']
+}
 
+gradlePlugin {
     plugins {
-        sassPlugin {
+        sass {
             id = 'org.kravemir.gradle.sass'
-            displayName = 'SASS Plugin'
+            displayName = project.getProperty('artifactName')
+            description = project.getProperty('artifactDescription')
+            implementationClass = 'org.kravemir.gradle.sass.SassPlugin'
+        }
+    }
+}
+
+if (publishingEnabled) {
+    afterEvaluate {
+        publishing.publications {
+            pluginMaven {
+                artifact sourceJar
+                artifact javadocJar
+
+                project.ext.fillPom(pom, project.getProperty('artifactName'), project.getProperty('artifactDescription'))
+            }
+
+            sassPluginMarkerMaven {
+                project.ext.fillPom(pom, project.getProperty('pluginmarker.artifactName'), project.getProperty('pluginmarker.artifactDescription'))
+            }
         }
     }
 }

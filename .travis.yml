@@ -8,3 +8,4 @@ jdk:
 
 script:
   - ./gradlew build
+  - ./bin/publishToMavenLocal.sh
