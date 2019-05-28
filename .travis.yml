@@ -1,0 +1,7 @@
+dist: xenial
+sudo: false
+
+language: java
+
+script:
+  - ./gradlew build
