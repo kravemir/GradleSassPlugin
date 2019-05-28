@@ -1,6 +1,7 @@
 GradleSassPlugin
 ================
 
+[![Build Status](https://travis-ci.org/kravemir/GradleSassPlugin.svg?branch=master)](https://travis-ci.org/kravemir/GradleSassPlugin)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/a52c030a137944948522ef868ef9548f)](https://www.codacy.com/app/kravec.miroslav/GradleSassPlugin?utm_source=github.com&utm_medium=referral&utm_content=kravemir/GradleSassPlugin&utm_campaign=badger)
 
 Plugin for SASS compilation. It uses [vaadin-sass-compiler](https://github.com/vaadin/sass-compiler).
