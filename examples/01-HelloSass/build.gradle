@@ -1,7 +1,21 @@
-plugins {
-    id 'org.kravemir.gradle.sass' version '1.2.2'
+buildscript {
+    repositories {
+        mavenCentral()
+        gradlePluginPortal()
+    }
+    dependencies {
+        classpath 'org.kravemir.gradle.sass:plugin:1.2.4-SNAPSHOT'
+    }
 }
 
+// apply Gradle base plugin and SASS plugin
+apply plugin: 'base'
+apply plugin: 'org.kravemir.gradle.sass'
+
+// declare main sass sourceset
 sass {
     main {}
 }
+
+// make complete build depend on main sass generation
+tasks.build.dependsOn(mainSass)

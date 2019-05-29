@@ -1,15 +1,14 @@
 buildscript {
     repositories {
-        mavenLocal()
-        maven {
-            url "https://plugins.gradle.org/m2/"
-        }
+        mavenCentral()
+        gradlePluginPortal()
     }
     dependencies {
-        classpath "gradle.plugin.org.kravemir.gradle.sass:GradleSassPlugin:1.2.2"
+        classpath 'org.kravemir.gradle.sass:plugin:1.2.4-SNAPSHOT'
     }
 }
 
+apply plugin: 'base'
 apply plugin: 'org.kravemir.gradle.sass'
 
 sass {
@@ -27,3 +26,7 @@ sass {
         minify = true
     }
 }
+
+// make complete build depend on all sass generation
+tasks.build.dependsOn(devSass)
+tasks.build.dependsOn(releaseSass)
