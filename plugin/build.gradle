@@ -15,10 +15,10 @@ apply plugin: 'signing'
 apply plugin: 'java-gradle-plugin'
 apply plugin: "com.gradle.plugin-publish"
 
-apply from: "${rootDir}/gradle/publishing.gradle"
+apply from: "${projectDir}/../gradle/publishing.gradle"
 
 group 'org.kravemir.gradle.sass'
-version '1.2.4-SNAPSHOT'
+version '1.2.4'
 
 sourceCompatibility = 1.8
 
@@ -103,6 +103,13 @@ if (publishingEnabled) {
 
             sassPluginMarkerMaven {
                 project.ext.fillPom(pom, project.getProperty('pluginmarker.artifactName'), project.getProperty('pluginmarker.artifactDescription'))
+            }
+        }
+
+        signing {
+            publishing.publications.all { publication ->
+                sign publication
+                required { !gradle.taskGraph.allTasks.findAll { it.name ==~ /.*Sonatype.*/ }.isEmpty() }
             }
         }
     }
