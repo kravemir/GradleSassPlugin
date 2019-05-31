@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Changed
 - make SASS tasks `@CacheableTask`, fix I/O task declarations, from  [@britter](https://github.com/britter).
+- set plugin name, and artifact id, to `gradle-sass-plugin`
 
 ## [1.2.3] - ...
 - TODO: changelog wasn't tracked

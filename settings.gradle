@@ -1,1 +1,3 @@
 include ':plugin', ':examples:01-HelloSass', ':examples:02-MultipleBuilds', ':examples:03-JavaResources'
+
+project(':plugin').name = 'gradle-sass-plugin'
