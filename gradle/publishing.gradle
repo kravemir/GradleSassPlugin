@@ -1,3 +1,44 @@
+import groovy.swing.SwingBuilder
+
+gradle.taskGraph.whenReady { taskGraph ->
+    if (!taskGraph.allTasks.findAll { it.name ==~ /.*Sonatype.*/ }.isEmpty()) {
+        String password = null
+
+        if (System.console() == null) {
+            new SwingBuilder().edt {
+                dialog(modal: true,
+                        title: 'Enter password',
+                        alwaysOnTop: true,
+                        resizable: false,
+                        locationRelativeTo: null,
+                        pack: true,
+                        show: true
+                ) {
+                    vbox {
+                        label(text: "Please enter key passphrase:")
+                        input = passwordField()
+                        button(defaultButton: true, text: 'OK', actionPerformed: {
+                            password = new String(input.password)
+                            dispose();
+                        })
+                    }
+                }
+            }
+        } else {
+            def passwordRaw = System.console().readPassword("\nPlease enter password: ")
+            password = new String(passwordRaw)
+        }
+
+        signing {
+            useGpgCmd()
+        }
+
+        project.publishing.repositories.each { repo ->
+            repo.credentials.password = password
+        }
+    }
+}
+
 ext.fillPom = { org.gradle.api.publish.maven.MavenPom pom, String name, String description ->
     pom.withXml {
 

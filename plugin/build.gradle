@@ -11,6 +11,7 @@ buildscript {
 
 apply plugin: 'java'
 apply plugin: 'maven-publish'
+apply plugin: 'signing'
 apply plugin: 'java-gradle-plugin'
 apply plugin: "com.gradle.plugin-publish"
 
@@ -65,6 +66,27 @@ gradlePlugin {
             displayName = project.getProperty('artifactName')
             description = project.getProperty('artifactDescription')
             implementationClass = 'org.kravemir.gradle.sass.SassPlugin'
+        }
+    }
+}
+
+publishing {
+    repositories {
+        maven {
+            name "sonatypeSnapshots"
+            url 'https://oss.sonatype.org/content/repositories/snapshots'
+            credentials {
+                username project.sonatypeUsername
+                password "-- not specified --"
+            }
+        }
+        maven {
+            name "sonatypeStaging"
+            url 'https://oss.sonatype.org/service/local/staging/deploy/maven2'
+            credentials {
+                username project.sonatypeUsername
+                password "-- not specified --"
+            }
         }
     }
 }
