@@ -14,6 +14,11 @@ Plugin for SASS compilation. It uses [vaadin-sass-compiler](https://github.com/v
   * [Configuration](#configuration)
 * [License](#license)
 
+Discontinued
+------------
+
+The author has no use for this gradle plugin anymore, and development has been discontinued.
+
 About
 -----
 
