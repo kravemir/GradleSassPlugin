@@ -35,7 +35,7 @@ public class IncrementalTasksTest {
     @Before
     public void setup() throws IOException {
         File buildFile = testProjectDir.newFile("build.gradle");
-        writeFile(buildFile, "plugins {\n id 'org.kravemir.gradle.sass'\n }\nsass{\nmain{}}");
+        writeFile(buildFile, "plugins {\n id 'org.kravemir.gradle.sass'\n }\nsass{\nmain{}}\n");
 
         Path mainSassPath = Paths.get(testProjectDir.getRoot().getPath(),"src","main","sass");
         Files.createDirectories(mainSassPath);
@@ -77,11 +77,32 @@ public class IncrementalTasksTest {
         assertFalse(mainSassBuildRoot.resolve(Paths.get("foo.css")).toFile().exists());
     }
 
+    @Test
+    public void testOutputHandling() throws IOException {
+        File buildFile = new File(testProjectDir.getRoot(), "build.gradle");
+        writeFile(buildFile,
+            "task myCopy(type:Sync) { \n" +
+                "from(mainSass) \n " +
+                "into('build/myCopy')\n" +
+            "\n }");
+
+        GradleRunner.create()
+            .withProjectDir(testProjectDir.getRoot())
+            .withArguments("myCopy", "--warning-mode", "fail")
+            .withGradleVersion("6.0-20191014000926+0000")
+            .withPluginClasspath()
+            .build();
+
+        Path syncedCss = Paths.get(testProjectDir.getRoot().getPath(), "build", "myCopy");
+        assertTrue(syncedCss.resolve(Paths.get("main.css")).toFile().exists());
+        assertTrue(syncedCss.resolve(Paths.get("foo.css")).toFile().exists());
+    }
+
 
     private void writeFile(File destination, String content) throws IOException {
         BufferedWriter output = null;
         try {
-            output = new BufferedWriter(new FileWriter(destination));
+            output = new BufferedWriter(new FileWriter(destination, true));
             output.write(content);
         } finally {
             if (output != null) {

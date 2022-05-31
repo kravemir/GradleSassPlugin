@@ -47,7 +47,7 @@ public class SassCompileTask extends AbstractSassCompileTask {
         this.srcDir = srcDir;
     }
 
-    @OutputDirectory
+    @Internal
     public File getOutDir() {
         return outDir != null ? outDir : Paths.get(getProject().getBuildDir().getPath(), "sass", sassSetName).toFile();
     }
